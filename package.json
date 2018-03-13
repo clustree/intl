@@ -5,5 +5,52 @@
   "main": "lib/index.js",
   "author": "Clustree",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "peerDependencies": {
+    "babel-plugin-macros": "^2.2.0"
+  },
+  "scripts": {
+    "build": "babel src -d lib --ignore '**/*.spec.js'",
+    "lint": "flow && eslint .",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,json}": ["prettier --write", "git add"]
+  },
+  "dependencies": {
+    "@babel/template": "^7.0.0-beta.40",
+    "chalk": "^2.3.2",
+    "glob": "^7.1.2",
+    "intl-messageformat-parser": "^1.4.0",
+    "ora": "^2.0.0",
+    "react-intl": "^2.4.0",
+    "react-intl-translations-manager": "^5.0.1",
+    "rimraf": "^2.6.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0-beta.40",
+    "@babel/core": "^7.0.0-beta.40",
+    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.40",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.40",
+    "@babel/preset-env": "^7.0.0-beta.40",
+    "@babel/preset-flow": "^7.0.0-beta.40",
+    "@babel/preset-react": "^7.0.0-beta.40",
+    "babel-core": "^7.0.0-0",
+    "babel-eslint": "^8.2.2",
+    "babel-jest": "^22.4.1",
+    "babel-plugin-macros": "^2.2.0",
+    "eslint": "^4.18.2",
+    "eslint-plugin-react": "^7.7.0",
+    "flow-bin": "^0.67.1",
+    "glow": "^1.2.2",
+    "husky": "^0.14.3",
+    "jest": "^22.4.2",
+    "lint-staged": "^7.0.0",
+    "prettier": "^1.11.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-test-renderer": "^16.2.0",
+    "release": "^3.1.7"
+  },
+  "sideEffects": false
 }
