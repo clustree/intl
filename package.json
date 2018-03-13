@@ -1,0 +1,9 @@
+{
+  "name": "@clustree/intl",
+  "version": "0.0.1",
+  "description": "Components used for translation by Clustree",
+  "main": "lib/index.js",
+  "author": "Clustree",
+  "license": "MIT",
+  "private": false
+}
