@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Translate Escapes JSX in values 1`] = `
+Array [
+  "bob ",
+  "<strong/>",
+  "",
+]
+`;
+
+exports[`Translate Escapes JSX in values 2`] = `
+Array [
+  "bob ",
+  "<details/>",
+  "",
+]
+`;
+
+exports[`Translate Escapes JSX in values 3`] = `"bob"`;
+
+exports[`Translate Escapes JSX in values 4`] = `
+Array [
+  "",
+  <strong />,
+  " in string",
+]
+`;
+
+exports[`Translate Translates with JSX in values 1`] = `
+Array [
+  "",
+  <strong>
+    plural
+  </strong>,
+  "",
+  <small>
+    jsx
+  </small>,
+  "",
+]
+`;
+
+exports[`Translate Translates with JSX in values 2`] = `
+Array [
+  "",
+  <strong>
+    bold
+  </strong>,
+  "",
+  <small>
+    tiny
+  </small>,
+  "",
+]
+`;
+
+exports[`Translate Translates with JSX in values 3`] = `
+Array [
+  "",
+  <small>
+    Tres petit
+  </small>,
+  "",
+  <strong>
+    gras
+  </strong>,
+  "",
+]
+`;
