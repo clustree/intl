@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /* eslint-disable max-depth, import/no-nodejs-modules, no-console */
 const path = require("path");
 

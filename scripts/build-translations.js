@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /* eslint-disable no-console */
 const { validate } = require("./validate-translations");
 const {
@@ -24,8 +26,8 @@ const { default: Worker } = require("jest-worker");
   spinner.succeed();
 
   spinner.start("getting javascript files");
-  const files = await worker.glob("src/packages/**/*.js", {
-    ignore: ["**/*.spec.js", "**/__tests__/**", "src/packages/clustree-intl/**"]
+  const files = await worker.glob("src/**/*.js", {
+    ignore: ["**/*.spec.js", "**/__tests__/**"]
   });
   spinner.succeed();
 
