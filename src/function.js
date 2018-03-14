@@ -14,7 +14,7 @@ export function translate(
   options?: Options = {}
 ): string {
   const { id = defaultMessage, values } = options;
-  const message = messages[id] || id;
+  const message = messages[id] || defaultMessage;
   return new IntlMessageFormat(message, locale).format(values);
 }
 
