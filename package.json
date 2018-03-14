@@ -14,7 +14,7 @@
     "build": "babel src -d lib --ignore '**/*.spec.js'",
     "lint": "flow && eslint .",
     "precommit": "lint-staged",
-    "prepublish": "yarn build"
+    "prepare": "yarn build"
   },
   "lint-staged": {
     "*.{js,json}": ["prettier --write", "git add"]
@@ -28,6 +28,13 @@
     "react-intl": "^2.4.0",
     "react-intl-translations-manager": "^5.0.1",
     "rimraf": "^2.6.2"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^@clustree/intl$": "<rootDir>/src/index.js",
+      "^@clustree/intl/macro$": "<rootDir>/macro/index.js"
+    },
+    "verbose": true
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.40",

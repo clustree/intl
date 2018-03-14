@@ -1,0 +1,4 @@
+coverage
+.*
+__snapshots__
+*.spec.js
