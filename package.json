@@ -1,6 +1,6 @@
 {
   "name": "@clustree/intl",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Components used for translation by Clustree",
   "main": "lib/index.js",
   "author": "Clustree",
@@ -10,9 +10,11 @@
     "babel-plugin-macros": "^2.2.0"
   },
   "scripts": {
+    "prebuild": "rimraf lib",
     "build": "babel src -d lib --ignore '**/*.spec.js'",
     "lint": "flow && eslint .",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "prepublish": "yarn build"
   },
   "lint-staged": {
     "*.{js,json}": ["prettier --write", "git add"]
