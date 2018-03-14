@@ -15,7 +15,8 @@
     "build": "babel src -d lib --ignore '**/*.spec.js'",
     "lint": "flow && eslint .",
     "precommit": "lint-staged",
-    "prepare": "yarn build"
+    "prepare": "yarn build",
+    "test": "jest"
   },
   "lint-staged": {
     "*.{js,json}": ["prettier --write", "git add"]
