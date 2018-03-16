@@ -13,7 +13,7 @@
   "scripts": {
     "prebuild": "rimraf lib",
     "build": "babel src -d lib --ignore '**/*.spec.js'",
-    "lint": "flow && eslint .",
+    "lint": "flow && eslint src macro",
     "precommit": "lint-staged",
     "prepare": "yarn build",
     "test": "jest"

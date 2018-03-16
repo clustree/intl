@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { setLocale, translate } from "../macro";
+import { setLocale, translate, formatDate } from "../macro";
 
 describe("translate", () => {
   it("gives the correct result", () => {
@@ -40,5 +40,31 @@ describe("translate", () => {
         id: "id.4"
       })
     ).toEqual("4 de test");
+  });
+});
+
+describe("formatDate", () => {
+  it("renders dates correctly", () => {
+    setLocale("fr");
+    expect(
+      formatDate(
+        new Date(2017, 0, 1),
+        {
+          year: "numeric",
+          month: "long",
+          day: "2-digit"
+        },
+        { locale: "en" }
+      )
+    ).toBe("January 01, 2017");
+
+    setLocale("en");
+    expect(
+      formatDate(new Date(2017, 0, 1), {
+        year: "numeric",
+        month: "long",
+        day: "2-digit"
+      })
+    ).toBe("January 01, 2017");
   });
 });

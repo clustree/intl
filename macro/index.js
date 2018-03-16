@@ -16,34 +16,22 @@ function macro({ references, state, config, babel }) {
 
   let imports = {};
 
+  Object.keys(references).map((ref, i) => {
+    for (const referencePath of references[ref] || []) {
+      imports[ref] = {
+        name: `${ref.toUpperCase()}_${i}`,
+        value: t.identifier(referencePath.node.name)
+      };
+      break;
+    }
+  });
+
   for (const referencePath of references.translate || []) {
-    imports.translate = {
-      name: "TRANSLATE",
-      value: t.identifier(referencePath.node.name)
-    };
     handleFunction(referencePath, state);
   }
 
   for (const referencePath of references.Translate || []) {
-    imports.Translate = {
-      name: "JSX_TRANSLATE",
-      value: t.identifier(referencePath.node.name)
-    };
     handleJSX(referencePath, state, babel);
-  }
-
-  for (const referencePath of references.Provider || []) {
-    imports.Provider = {
-      name: "JSX_PROVIDER",
-      value: t.identifier(referencePath.node.name)
-    };
-  }
-
-  for (const referencePath of references.setLocale || []) {
-    imports.setLocale = {
-      name: "SET_LOCALE",
-      value: t.identifier(referencePath.node.name)
-    };
   }
 
   post(file, config, imports);
