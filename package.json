@@ -19,11 +19,14 @@
     "test": "jest"
   },
   "lint-staged": {
-    "*.{js,json}": ["prettier --write", "git add"]
+    "*.{js,json}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "bin": {
-    "clustree-intl-extract": "./scripts/extract-translations",
-    "clustree-intl-validate": "./scripts/validate-translations"
+    "clustree-intl-extract": "./scripts/extract-translations.js",
+    "clustree-intl-validate": "./scripts/validate-translations.js"
   },
   "dependencies": {
     "@babel/template": "^7.0.0-beta.40",

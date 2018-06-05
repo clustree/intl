@@ -39,7 +39,7 @@ const { default: Worker } = require("jest-worker");
       done++;
       if (done % 10 === 0) {
         spinner.text = `extracting intl messages ${Math.floor(
-          done * 100 / files.length
+          (done * 100) / files.length
         )}%`;
       }
     })
