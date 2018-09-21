@@ -42,7 +42,12 @@
       "^@clustree/intl$": "<rootDir>/src/index.js",
       "^@clustree/intl/macro$": "<rootDir>/macro/index.js"
     },
-    "verbose": true
+    "verbose": true,
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "scripts/**/*.js",
+      "!**/.eslintrc.js"
+    ]
   },
   "devDependencies": {
     "@babel/cli": "^7.1.0",

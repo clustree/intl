@@ -74,6 +74,17 @@ describe("Translate", () => {
       />
     );
   });
+
+  it("Renders null on Error", () => {
+    checkSnapshot(<Translate defaultMessage="<a></b>" />);
+    checkSnapshot(<Translate defaultMessage="<a>" />);
+    checkSnapshot(<Translate defaultMessage="</a>" />);
+  });
+
+  xit("Renders null on Error", () => {
+    // FIXME This should render null
+    checkSnapshot(<Translate defaultMessage="{a}}" />);
+  });
 });
 
 describe("translate", () => {

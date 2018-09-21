@@ -5,56 +5,13 @@ const path = require("path");
 
 // TODO check that translations tags have the same count and ids
 const intlparser = require("intl-messageformat-parser");
-const { parse, tokenize } = require("../lib/parse");
+const { tokenize } = require("../lib/parse");
 const chalk = require("chalk");
+const { parse } = require("./utils/parse");
 
-const prefix = path.join(process.cwd(), "messages", "translations");
+const defaultPrefix = path.join(process.cwd(), "messages", "translations");
 const defaultLanguage = "en";
 const languages = ["en", "fr"];
-
-function raiseParseError(ast) {
-  console.log(chalk.magenta(JSON.stringify(ast, null, 2)));
-  throw new Error("unexpected");
-}
-
-// TODO: simplify
-function getMessageVariants(ast) {
-  const { type } = ast;
-  if (type === "messageFormatPattern") {
-    return ast.elements.map(getMessageVariants);
-  }
-  if (type === "messageTextElement") {
-    return ast.value;
-  }
-  if (type === "argumentElement") {
-    if (ast.format === null) {
-      return `{${ast.id}}`;
-    }
-    if (ast.format.type === "numberFormat") {
-      return `{${ast.id}, number}`;
-    }
-    if (ast.format.type === "pluralFormat") {
-      if (!ast.format.ordinal) {
-        return {
-          type: "plural",
-          id: ast.id,
-          values: ast.format.options.map(option => {
-            if (option.type === "optionalFormatPattern") {
-              return {
-                selector: option.selector,
-                value: getMessageVariants(option.value)
-              };
-            }
-            raiseParseError(ast);
-            return null;
-          })
-        };
-      }
-    }
-  }
-  raiseParseError(ast);
-  return null;
-}
 
 function astGetValues(ast) {
   const { type } = ast;
@@ -94,8 +51,10 @@ function astGetValues(ast) {
         return set;
       }
     }
+    if (ast.format.type === "selectFormat") {
+      return new Set().add(ast.id);
+    }
   }
-  raiseParseError(ast);
   return null;
 }
 
@@ -113,91 +72,16 @@ function getComponents(message) {
   return tags;
 }
 
-// TODO: simplify
-function flatten(ast) {
-  if (Array.isArray(ast)) {
-    const res = ast.reduce(
-      (acc, token) => {
-        if (typeof token === "string") {
-          return acc.map(e => ({
-            ...e,
-            value: e.value + token
-          }));
-        } else {
-          let retVal = [];
-          const pluralId = token.id;
-          for (const pluralValue of token.values) {
-            const { selector } = pluralValue;
-            for (const inner of flatten(pluralValue.value)) {
-              retVal = retVal.concat(
-                acc.map(e => ({
-                  plurals: [
-                    ...e.plurals,
-                    { pluralId, selector },
-                    ...inner.plurals
-                  ],
-                  value: e.value + inner.value
-                }))
-              );
-            }
-          }
-          return retVal;
-        }
-      },
-      [{ value: "", plurals: [] }]
-    );
-    return res;
-  }
-  return ast;
-}
-
-exports.validate = () => {
-  const invalidCDLR = [];
+exports.validate = (prefix = defaultPrefix) => {
+  const invalidICUFormat = [];
   const invalidXML = [];
   const potentialErrors = [];
 
   const messageCache = new Map();
 
   for (const language of languages) {
-    const langCache = new Map();
-    // eslint-disable-next-line global-require
     const messages = require(path.join(prefix, `${language}.json`));
-    for (const [key, message] of Object.entries(messages)) {
-      const data = {};
-      const variantMap = new Map();
-      let parsed = null;
-      try {
-        parsed = intlparser.parse(message);
-      } catch (e) {
-        invalidCDLR.push({ language, key, message });
-        continue;
-      }
-      // Parsing validates Intl AST format
-      const variants = flatten(getMessageVariants(parsed));
-      for (const variant of variants) {
-        const variantKey =
-          variant.plurals
-            .map(({ pluralId, selector }) => `${pluralId}:${selector}`)
-            .join("") || "default";
-        variantMap.set(variantKey, variant.value);
-        try {
-          parse(variant.value);
-        } catch (e) {
-          invalidXML.push({
-            language,
-            key,
-            message,
-            variant: variant.value,
-            variantKey
-          });
-          continue;
-        }
-      }
-      data.message = message;
-      data.variants = variantMap;
-      langCache.set(key, data);
-    }
-    messageCache.set(language, langCache);
+    messageCache.set(language, parse(messages));
   }
 
   for (const message of messageCache.get(defaultLanguage).values()) {
@@ -247,11 +131,12 @@ exports.validate = () => {
       }
     }
   }
-
-  if (invalidCDLR.length) {
+  if (invalidICUFormat.length) {
     process.exitCode = 1;
-    console.log(chalk.bold.underline("Invalid CDLR messages"));
-    for (const errorObj of invalidCDLR) {
+    console.log(
+      chalk.bold.underline("Invalid ICU Format in the following messages")
+    );
+    for (const errorObj of invalidICUFormat) {
       logErrorObj(errorObj);
     }
   }

@@ -26,6 +26,12 @@ Array [
 ]
 `;
 
+exports[`Translate Renders null on Error 1`] = `null`;
+
+exports[`Translate Renders null on Error 2`] = `null`;
+
+exports[`Translate Renders null on Error 3`] = `null`;
+
 exports[`Translate Translates with JSX in values 1`] = `
 Array [
   "",
