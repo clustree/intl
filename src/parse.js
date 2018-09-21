@@ -54,9 +54,7 @@ export function parse(input) {
   const tokens = tokenize(input);
   const stack = [{ type: null, values: [] }];
   for (const token of tokens) {
-    if (token.type === "string" || token.type === "jsx-autoclose") {
-      last(stack).values.push(token);
-    } else if (token.type === "jsx-open") {
+    if (token.type === "jsx-open") {
       stack.push({ id: token.id, values: [], type: "jsx" });
     } else if (token.type === "jsx-close") {
       const plate = stack.pop();
@@ -64,6 +62,8 @@ export function parse(input) {
         throw new ParseError(`Unable to parse: ${input}`);
       }
       last(stack).values.push(plate);
+    } else {
+      last(stack).values.push(token);
     }
   }
   if (stack.length !== 1) {
