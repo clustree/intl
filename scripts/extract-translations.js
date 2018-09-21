@@ -22,7 +22,7 @@ const { default: Worker } = require("jest-worker");
   const spinner = ora();
 
   spinner.start("cleaning messages directory");
-  await worker.rimraf("messages/build");
+  await worker.rimraf(messagesDirectory);
   spinner.succeed();
 
   spinner.start("getting javascript files");
