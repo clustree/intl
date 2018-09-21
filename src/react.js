@@ -19,7 +19,23 @@ type LocalComponents = {};
 const regex = /^([^<]*?)<([A-Za-z0-9-:]+)>([\s\S]*?)<\/\2>([\s\S]*)$/;
 const regexAutoClose = /^([^<]*?)<([A-Za-z0-9-:]+) ?\/>([\s\S]*)$/;
 
-export class Translate extends React.Component<TProps> {
+export class Translate extends React.Component<TProps, { hasError: boolean }> {
+  state = { hasError: false };
+  componentDidCatch(error: *) {
+    // eslint-disable-next-line no-console
+    console.warn("Error rendering <Translate />", this.props, error);
+    this.setState({ hasError: true });
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return null;
+    }
+    return <TranslateHelper {...this.props} />;
+  }
+}
+
+class TranslateHelper extends React.Component<TProps> {
   parse(values: *, localComponents: LocalComponents) {
     return (
       <Fragment>
@@ -83,18 +99,11 @@ export class Translate extends React.Component<TProps> {
         }
       }
     }
-
-    // console.log({ defaultMessage, id, cleanValues });
-
-    try {
-      return (
-        <FormattedMessage {...{ id, defaultMessage, values: cleanValues }}>
-          {(...messages) => this.renderMessages(messages, innerValues)}
-        </FormattedMessage>
-      );
-    } catch (error) {
-      return null;
-    }
+    return (
+      <FormattedMessage {...{ id, defaultMessage, values: cleanValues }}>
+        {(...messages) => this.renderMessages(messages, innerValues)}
+      </FormattedMessage>
+    );
   }
 }
 
