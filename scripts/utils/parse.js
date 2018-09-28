@@ -50,7 +50,7 @@ exports.parse = messages => {
         continue;
       }
     }
-    langCache.set(key, message);
+    langCache.set(key, { message });
   }
   if (invalidICUFormat.length || invalidXML.length) {
     throw new ParseError({

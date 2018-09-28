@@ -73,7 +73,35 @@ describe("parse", () => {
         "selectXml" => "<a>{value, select, male { # </a>} other {# </a>}}",
         "nested" => "<a>{value1, plural, one {{value2, select,left {one left</a>} other {one right</a>}}}other {{value2, select,right {one right</a>} other {one left</a>}}}}",
       }
+      `,
       `
+Map {
+  "simple" => Object {
+    "message": "value",
+  },
+  "number" => Object {
+    "message": "{value, number}",
+  },
+  "plural" => Object {
+    "message": "{value, plural, one{ # three} two {# test}}",
+  },
+  "select" => Object {
+    "message": "{value, select, male { He} female {She} other {They}}",
+  },
+  "xml" => Object {
+    "message": "<a><b/></a>",
+  },
+  "pluralXml" => Object {
+    "message": "<a>{value, plural, one { # </a>} other {# </a>}}",
+  },
+  "selectXml" => Object {
+    "message": "<a>{value, select, male { # </a>} other {# </a>}}",
+  },
+  "nested" => Object {
+    "message": "<a>{value1, plural, one {{value2, select,left {one left</a>} other {one right</a>}}}other {{value2, select,right {one right</a>} other {one left</a>}}}}",
+  },
+}
+`
     );
   });
 
