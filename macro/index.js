@@ -46,7 +46,8 @@ function pre(file) {
 function post(file, config, imports) {
   addImports(file, imports);
 
-  const { basename, filename } = file.opts;
+  const { filename } = file.opts;
+  const basename = p.basename(filename, p.extname(filename));
 
   const messages = file.get(MESSAGES);
   const descriptors = [...messages.values()];
