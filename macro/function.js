@@ -13,6 +13,7 @@ exports.handleFunction = function handleFunction(p, state) {
   const args = path.get("arguments");
   const [message, options] = [args[0], args[1]];
   if (
+    options != null &&
     options
       .get("properties")
       .find(prop => getMessageDescriptorKey(prop.get("key")) === "allowDynamic")

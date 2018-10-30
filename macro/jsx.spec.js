@@ -28,7 +28,8 @@ var a = function a(bob) {
 const codeFunction = `
 import {translate} from '../macro';
 
-const a = (bob) => translate(bob, {id: bob, allowDynamic: true});
+const a = (bob) => translate(bob[0].name, {id: \`dynamic.\${bob}.value\`, allowDynamic: true});
+const b = translate('bla');
 `;
 
 it("WERKS 2", () => {
@@ -39,10 +40,12 @@ it("WERKS 2", () => {
 var _intl = require(\\"@clustree/intl\\");
 
 var a = function a(bob) {
-  return (0, _intl.translate)(bob, {
-    id: bob,
+  return (0, _intl.translate)(bob[0].name, {
+    id: \\"dynamic.\\".concat(bob, \\".value\\"),
     allowDynamic: true
   });
-};"
+};
+
+var b = (0, _intl.translate)('bla');"
 `);
 });
