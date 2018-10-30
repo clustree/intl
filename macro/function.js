@@ -12,6 +12,13 @@ exports.handleFunction = function handleFunction(p, state) {
   }
   const args = path.get("arguments");
   const [message, options] = [args[0], args[1]];
+  if (
+    options
+      .get("properties")
+      .find(prop => getMessageDescriptorKey(prop.get("key")) === "allowDynamic")
+  ) {
+    return;
+  }
   const defaultMessage = getMessageDescriptorValue(message);
   let id = defaultMessage;
   let description = null;
