@@ -62,18 +62,6 @@ describe("parse", () => {
           "<a>{value1, plural, one {{value2, select,left {one left</a>} other {one right</a>}}}other {{value2, select,right {one right</a>} other {one left</a>}}}}"
       })
     ).toMatchInlineSnapshot(
-      dedent`
-      Map {
-        "simple" => "value",
-        "number" => "{value, number}",
-        "plural" => "{value, plural, one{ # three} two {# test}}",
-        "select" => "{value, select, male { He} female {She} other {They}}",
-        "xml" => "<a><b/></a>",
-        "pluralXml" => "<a>{value, plural, one { # </a>} other {# </a>}}",
-        "selectXml" => "<a>{value, select, male { # </a>} other {# </a>}}",
-        "nested" => "<a>{value1, plural, one {{value2, select,left {one left</a>} other {one right</a>}}}other {{value2, select,right {one right</a>} other {one left</a>}}}}",
-      }
-      `,
       `
 Map {
   "simple" => Object {
