@@ -6,10 +6,12 @@ const {
 } = require("./helpers");
 
 exports.handleJSX = function handleJSX(p, state, babel) {
+  // Ignore closing tag
   if (p.parentPath.type === "JSXClosingElement") {
     return;
   }
   let path = p.parentPath.parentPath;
+  //  Path is now the JSXElement <Translate />
   if (path.type !== "JSXElement") {
     throw buildMacroError("`Translate` not called as JSX");
   }
@@ -213,6 +215,13 @@ function extractDefs(path, state) {
     .get("openingElement")
     .get("attributes")
     .filter(attr => attr.isJSXAttribute());
+
+  if (
+    attributes.find(attribute => attribute.node.name.name === "allowDynamic")
+  ) {
+    // Ignore this Tag as it is dynamic
+    return;
+  }
 
   let descriptor = createMessageDescriptor(
     attributes.map(attr => [attr.get("name"), attr.get("value")])

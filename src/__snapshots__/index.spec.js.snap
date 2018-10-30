@@ -1,5 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Dynamic translations Translates with dynamic key 1`] = `
+Array [
+  "custom1 name",
+  "custom2 name",
+]
+`;
+
 exports[`Translate Escapes JSX in values 1`] = `
 Array [
   "bob ",

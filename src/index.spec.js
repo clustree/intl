@@ -96,3 +96,23 @@ describe("translate", () => {
     ).toEqual("test 4");
   });
 });
+
+describe("Dynamic translations", () => {
+  it("Translates with dynamic key", () => {
+    const name1 = "custom1";
+    const name2 = "custom2";
+    checkSnapshot(
+      <>
+        <Translate defaultMessage={name1} id={`dynamic.${name1}`} />
+        <Translate defaultMessage={name2} id={`dynamic.${name2}`} />
+      </>,
+      {
+        locale: "fr",
+        messages: {
+          "dynamic.custom1": "custom1 name",
+          "dynamic.custom2": "custom2 name"
+        }
+      }
+    );
+  });
+});
