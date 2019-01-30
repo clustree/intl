@@ -1,6 +1,6 @@
 /* eslint-disable func-names */
 
-const babel = require("babel-core");
+const babel = require("@babel/core");
 const rimraf = require("rimraf");
 const glob = require("glob");
 

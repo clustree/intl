@@ -1,6 +1,6 @@
 /* eslint-env jest */
 
-const { transform } = require("babel-core");
+const { transform } = require("@babel/core");
 
 const codeJSX = `
 import {Translate} from '../macro';

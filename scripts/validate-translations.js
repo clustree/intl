@@ -44,7 +44,6 @@ function astGetValues(ast) {
               set.add(value);
             }
           } else {
-            raiseParseError(ast);
             return null;
           }
         }
