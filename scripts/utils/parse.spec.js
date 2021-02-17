@@ -2,7 +2,7 @@
 import { parse, ParseError } from "./parse";
 
 // Adapted from https://github.com/dmnd/dedent
-function dedent(strings: string | Array<string>, ...values: Array<string>) {
+function dedent(strings, ...values) {
   // $FlowFixMe: Flow doesn't undestand .raw
   const raw = typeof strings === "string" ? [strings] : strings.raw;
 
@@ -22,7 +22,7 @@ function dedent(strings: string | Array<string>, ...values: Array<string>) {
 
   // now strip indentation
   const lines = result.split("\n");
-  let mindent: number | null = null;
+  let mindent = null;
   lines.forEach((l, i) => {
     let m = l.match(/^\s*(?=\S)/);
     let indent = m == null ? null : m[0].length;

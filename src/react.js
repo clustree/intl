@@ -1,27 +1,17 @@
-// @flow
 import React, { Fragment } from "react";
 
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { setLocale } from "./function";
 import { parse } from "./parse";
 
-type TProps = {
-  defaultMessage?: string,
-  id?: string,
-  values?: {},
-  components?: {}
-};
-
-type LocalComponents = {};
-
 // Matches (Before)<(Tagname)>(contents)</Tagname>(After)
 // use \s\S for any char .* doesn't match \n
 const regex = /^([^<]*?)<([A-Za-z0-9-:]+)>([\s\S]*?)<\/\2>([\s\S]*)$/;
 const regexAutoClose = /^([^<]*?)<([A-Za-z0-9-:]+) ?\/>([\s\S]*)$/;
 
-export class Translate extends React.Component<TProps, { hasError: boolean }> {
+export class Translate extends React.Component {
   state = { hasError: false };
-  componentDidCatch(error: *) {
+  componentDidCatch(error) {
     // eslint-disable-next-line no-console
     console.warn("Error rendering <Translate />", this.props, error);
     this.setState({ hasError: true });
@@ -35,8 +25,8 @@ export class Translate extends React.Component<TProps, { hasError: boolean }> {
   }
 }
 
-class TranslateHelper extends React.Component<TProps> {
-  parse(values: *, localComponents: LocalComponents) {
+class TranslateHelper extends React.Component {
+  parse(values, localComponents) {
     return (
       <Fragment>
         {values.map((element, i) => {
@@ -59,7 +49,7 @@ class TranslateHelper extends React.Component<TProps> {
     );
   }
 
-  renderMessages(messages: Array<*>, innerValues: Object) {
+  renderMessages(messages, innerValues) {
     const { components } = this.props;
     const localComponents = { ...components };
     let jsxElement = 0;
@@ -107,7 +97,7 @@ class TranslateHelper extends React.Component<TProps> {
   }
 }
 
-export class Provider extends React.Component<*> {
+export class Provider extends React.Component {
   render() {
     const { children, locale, messages } = this.props;
     setLocale(locale, messages);
