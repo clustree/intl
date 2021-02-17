@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import { setLocale, translate, formatDate } from "../macro";
+const { setLocale, translate, formatDate } = require("../macro");
 
 describe("translate", () => {
   it("gives the correct result", () => {

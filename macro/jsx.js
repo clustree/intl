@@ -40,13 +40,19 @@ function transformJSX(path, state, babel) {
 }
 
 function processElement(node, props, types) {
-  const item = node.openingElement.name;
-  let name = item.name;
+  let name;
+  let selfClosing = false;
+  if (types.isJSXFragment(node)) {
+    name = "Fragment";
+  } else {
+    const item = node.openingElement.name;
+    name = item.name;
+    selfClosing = node.openingElement.selfClosing;
+  }
   const index = elementGenerator(name);
   if (index) {
     name = `${name}-${index}`;
   }
-  const selfClosing = node.openingElement.selfClosing;
 
   props.text += !selfClosing ? `<${name}>` : `<${name}/>`;
 
@@ -58,12 +64,26 @@ function processElement(node, props, types) {
     props.text += `</${name}>`;
   }
 
-  props.components = Object.assign({}, props.components, {
+  props.values = Object.assign({}, props.values, {
     [name]: types.objectProperty(
       types.isValidIdentifier(name)
         ? types.identifier(name)
         : types.stringLiteral(name),
-      node
+
+      types.arrowFunctionExpression(
+        [types.identifier("chunks")],
+        types.isJSXFragment(node)
+          ? types.jSXFragment(
+              types.jSXOpeningFragment(),
+              types.jSXClosingFragment(),
+              [types.jsxExpressionContainer(types.identifier("chunks"))]
+            )
+          : types.jSXElement(
+              types.cloneNode(node.openingElement),
+              types.cloneNode(node.closingElement),
+              [types.jsxExpressionContainer(types.identifier("chunks"))]
+            )
+      )
     ),
   });
   return props;
@@ -125,6 +145,8 @@ function processChild(node, props, types) {
         nextProps.values[name] = types.objectProperty(key, exp);
       }
     }
+  } else if (types.isJSXFragment(node)) {
+    nextProps = processElement(node, nextProps, types);
   } else if (types.isJSXElement(node)) {
     nextProps = processElement(node, nextProps, types);
   } else {
@@ -154,7 +176,6 @@ function processTranslate(path, types) {
   const text = props.text.replace(nlTagRe, "$1").replace(nlRe, " ").trim();
 
   const values = Object.values(props.values);
-  const components = Object.values(props.components);
 
   const attributes = path.node.openingElement.attributes.slice();
   attributes.push(
@@ -168,14 +189,6 @@ function processTranslate(path, types) {
       types.JSXAttribute(
         types.JSXIdentifier("values"),
         types.JSXExpressionContainer(types.objectExpression(values))
-      )
-    );
-  }
-  if (components.length) {
-    attributes.push(
-      types.JSXAttribute(
-        types.JSXIdentifier("components"),
-        types.JSXExpressionContainer(types.objectExpression(components))
       )
     );
   }

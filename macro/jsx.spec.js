@@ -2,50 +2,105 @@
 
 const { transform } = require("@babel/core");
 
-const codeJSX = `
-import {Translate} from '../macro';
+expect.addSnapshotSerializer({
+  serialize(val) {
+    return val;
+  },
 
-const a = (bob) => <Translate id={bob} defaultMessage={bob} allowDynamic />;
-`;
-
-it("WERKS", () => {
-  expect(transform(codeJSX, { filename: __filename }).code)
-    .toMatchInlineSnapshot(`
-"\\"use strict\\";
-
-var _intl = require(\\"@clustree/intl\\");
-
-var a = function a(bob) {
-  return React.createElement(_intl.Translate, {
-    id: bob,
-    defaultMessage: bob,
-    allowDynamic: true
-  });
-};"
-`);
+  test(val) {
+    return typeof val === "string" && val.indexOf("\n") !== -1;
+  },
 });
 
-const codeFunction = `
+const BABEL_OPTIONS = {
+  babelrc: false,
+  plugins: ["@babel/plugin-syntax-jsx", "babel-plugin-macros"],
+  presets: [],
+  filename: __filename,
+};
+
+describe("Translate", () => {
+  it("compiles with allowDynamic", () => {
+    expect(
+      transform(
+        `
+        import {Translate} from '../macro';
+        
+        const a = (bob) => <Translate id={bob} defaultMessage={bob} allowDynamic />;
+        `,
+        BABEL_OPTIONS
+      ).code
+    ).toMatchInlineSnapshot(`
+      import { Translate } from '@clustree/intl';
+
+      const a = bob => <Translate id={bob} defaultMessage={bob} allowDynamic />;
+    `);
+  });
+
+  it("compiles with nested JSX", () => {
+    expect(
+      transform(
+        `
+          import {Translate} from '../macro';
+          const a = (bob) => <Translate id="str"><Fragment><p><a href=""/></p><p></p></Fragment></Translate>;
+          `,
+        BABEL_OPTIONS
+      ).code
+    ).toMatchInlineSnapshot(`
+      import { Translate } from '@clustree/intl';
+
+      const a = bob => <Translate id="str" defaultMessage="<Fragment><p><a/></p><p-1></p-1></Fragment>" values={{
+        a: chunks => <a href="" />,
+        p: chunks => <p>{chunks}</p>,
+        "p-1": chunks => <p>{chunks}</p>,
+        Fragment: chunks => <Fragment>{chunks}</Fragment>
+      }} />;
+    `);
+  });
+
+  it("compiles with fragment shorthand", () => {
+    expect(
+      transform(
+        `
+          import {Translate} from '../macro';
+          const a = (bob) => <Translate id="str"><><p><a href=""/></p><p></p></></Translate>;
+          `,
+        BABEL_OPTIONS
+      ).code
+    ).toMatchInlineSnapshot(`
+      import { Translate } from '@clustree/intl';
+
+      const a = bob => <Translate id="str" defaultMessage="<Fragment><p><a/></p><p-1></p-1></Fragment>" values={{
+        a: chunks => <a href="" />,
+        p: chunks => <p>{chunks}</p>,
+        "p-1": chunks => <p>{chunks}</p>,
+        Fragment: chunks => <>{chunks}</>
+      }} />;
+    `);
+  });
+});
+
+describe("translate", () => {
+  it("compiles with allowDynamic", () => {
+    expect(
+      transform(
+        `
 import {translate} from '../macro';
 
 const a = (bob) => translate(bob[0].name, {id: \`dynamic.\${bob}.value\`, allowDynamic: true});
 const b = translate('bla');
-`;
+    `,
+        BABEL_OPTIONS
+      ).code
+    ).toMatchInlineSnapshot(`
+      import { translate } from '@clustree/intl';
 
-it("WERKS 2", () => {
-  expect(transform(codeFunction, { filename: __filename }).code)
-    .toMatchInlineSnapshot(`
-"\\"use strict\\";
+      const a = bob => translate(bob[0].name, {
+        id: \`dynamic.\${bob}.value\`,
+        allowDynamic: true
+      });
 
-var _intl = require(\\"@clustree/intl\\");
-
-var a = function a(bob) {
-  return (0, _intl.translate)(bob[0].name, {
-    id: \\"dynamic.\\".concat(bob, \\".value\\"),
-    allowDynamic: true
+      const b = translate('bla');
+    `);
   });
-};
-
-var b = (0, _intl.translate)('bla');"
-`);
 });

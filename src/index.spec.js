@@ -4,87 +4,147 @@ import renderer from "react-test-renderer";
 import { Provider, translate, Translate } from "../macro";
 
 const smallStrong = {
-  small: <small />,
-  strong: <strong />,
+  small: (chunk) => <small>{chunk}</small>,
+  strong: (chunk) => <strong>{chunk}</strong>,
 };
 
-function checkSnapshot(elt, { locale = "en", messages } = {}) {
-  expect(
-    renderer
-      .create(
-        <Provider locale={locale} messages={messages} defaultLocale="en">
+function buildSnapshot(elt, { locale = "en", messages, onError } = {}) {
+  return renderer
+    .create(
+      <>
+        <Provider
+          locale={locale}
+          messages={messages}
+          defaultLocale="en"
+          onError={onError}
+        >
           {elt}
         </Provider>
-      )
-      .toJSON()
-  ).toMatchSnapshot();
+      </>
+    )
+    .toJSON();
 }
 
 describe("Translate", () => {
   it("Translates with JSX in values", () => {
-    checkSnapshot(
-      <Translate
-        defaultMessage={`{nb, plural,
+    expect(
+      buildSnapshot(
+        <Translate
+          defaultMessage={`{nb, plural,
           one {<strong>singular</strong><small>jsx</small>}
           other {<strong>plural</strong><small>jsx</small>}
         }`}
-        values={{ nb: 5 }}
-        components={smallStrong}
-      />
-    );
+          values={{ nb: 5, ...smallStrong }}
+        />
+      )
+    ).toMatchInlineSnapshot(`
+      Array [
+        <strong>
+          plural
+        </strong>,
+        <small>
+          jsx
+        </small>,
+      ]
+    `);
 
-    checkSnapshot(
-      <Translate>
-        <strong>bold</strong>
-        <small>tiny</small>
-      </Translate>
-    );
+    expect(
+      buildSnapshot(
+        <Translate>
+          <strong>bold</strong>
+          <small>tiny</small>
+        </Translate>
+      )
+    ).toMatchInlineSnapshot(`
+      Array [
+        <strong>
+          bold
+        </strong>,
+        <small>
+          tiny
+        </small>,
+      ]
+    `);
 
-    checkSnapshot(
-      <Translate>
-        <strong>bold</strong>
-        <small>tiny</small>
-      </Translate>,
-      {
-        locale: "fr",
-        messages: {
-          "<strong>bold</strong><small>tiny</small>":
-            "<small>Tres petit</small><strong>gras</strong>",
-        },
-      }
-    );
+    expect(
+      buildSnapshot(
+        <Translate>
+          <strong>bold</strong>
+          <small>tiny</small>
+        </Translate>,
+        {
+          locale: "fr",
+          messages: {
+            "<strong>bold</strong><small>tiny</small>":
+              "<small>Tres petit</small><strong>gras</strong>",
+          },
+        }
+      )
+    ).toMatchInlineSnapshot(`
+      Array [
+        <small>
+          Tres petit
+        </small>,
+        <strong>
+          gras
+        </strong>,
+      ]
+    `);
   });
 });
 
 describe("Translate", () => {
   it("Escapes JSX in values", () => {
     const strong = "<strong/>";
-    checkSnapshot(<Translate components={smallStrong}>bob {strong}</Translate>);
+    expect(
+      buildSnapshot(
+        <Translate components={smallStrong}>bob {strong}</Translate>
+      )
+    ).toMatchInlineSnapshot(`"bob "`);
     const details = "<details/>";
-    checkSnapshot(
-      <Translate components={smallStrong}>bob {details}</Translate>
-    );
+    expect(
+      buildSnapshot(
+        <Translate components={smallStrong}>bob {details}</Translate>
+      )
+    ).toMatchInlineSnapshot(`"bob <details/>"`);
 
-    checkSnapshot(<Translate components={smallStrong}>bob</Translate>);
+    expect(
+      buildSnapshot(<Translate components={smallStrong}>bob</Translate>)
+    ).toMatchInlineSnapshot(`"bob"`);
 
-    checkSnapshot(
-      <Translate
-        values={{ jsx: <strong /> }}
-        defaultMessage="{jsx} in string"
-      />
-    );
+    expect(
+      buildSnapshot(
+        <Translate
+          values={{ jsx: <strong /> }}
+          defaultMessage="{jsx} in string"
+        />
+      )
+    ).toMatchInlineSnapshot(`
+      Array [
+        <strong />,
+        " in string",
+      ]
+    `);
   });
+});
 
-  it("Renders null on Error", () => {
-    checkSnapshot(<Translate defaultMessage="<a></b>" />);
-    checkSnapshot(<Translate defaultMessage="<a>" />);
-    checkSnapshot(<Translate defaultMessage="</a>" />);
-  });
-
-  xit("Renders null on Error", () => {
-    // FIXME This should render null
-    checkSnapshot(<Translate defaultMessage="{a}}" />);
-  });
+describe("Translate Error", () => {
+  it.each([["<a></b>"], ["<a>"], ["</a>"], ["{a}}"]])(
+    "renders defaultMessage `%s` on Error",
+    (defaultMessage) => {
+      const onError = jest.fn();
+      expect(
+        buildSnapshot(
+          <Translate defaultMessage={defaultMessage} allowDynamic />,
+          {
+            onError,
+          }
+        )
+      ).toBe(defaultMessage);
+      expect(onError).toHaveBeenCalled();
+      onError.mockClear();
+    }
+  );
 });
 
 describe("translate", () => {
@@ -101,18 +161,25 @@ describe("Dynamic translations", () => {
   it("Translates with dynamic key", () => {
     const name1 = "custom1";
     const name2 = "custom2";
-    checkSnapshot(
-      <>
-        <Translate defaultMessage={name1} id={`dynamic.${name1}`} />
-        <Translate defaultMessage={name2} id={`dynamic.${name2}`} />
-      </>,
-      {
-        locale: "fr",
-        messages: {
-          "dynamic.custom1": "custom1 name",
-          "dynamic.custom2": "custom2 name",
-        },
-      }
-    );
+    expect(
+      buildSnapshot(
+        <>
+          <Translate defaultMessage={name1} id={`dynamic.${name1}`} />
+          <Translate defaultMessage={name2} id={`dynamic.${name2}`} />
+        </>,
+        {
+          locale: "fr",
+          messages: {
+            "dynamic.custom1": "custom1 name",
+            "dynamic.custom2": "custom2 name",
+          },
+        }
+      )
+    ).toMatchInlineSnapshot(`
+      Array [
+        "custom1 name",
+        "custom2 name",
+      ]
+    `);
   });
 });
