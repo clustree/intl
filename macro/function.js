@@ -2,7 +2,7 @@ const {
   getMessageDescriptorValue,
   getMessageDescriptorKey,
   storeMessage,
-  buildMacroError
+  buildMacroError,
 } = require("./helpers");
 
 exports.handleFunction = function handleFunction(p, state) {
@@ -16,7 +16,9 @@ exports.handleFunction = function handleFunction(p, state) {
     options != null &&
     options
       .get("properties")
-      .find(prop => getMessageDescriptorKey(prop.get("key")) === "allowDynamic")
+      .find(
+        (prop) => getMessageDescriptorKey(prop.get("key")) === "allowDynamic"
+      )
   ) {
     return;
   }
@@ -44,7 +46,7 @@ exports.handleFunction = function handleFunction(p, state) {
   // Evaluate the Message Descriptor values, then store it.
   const descriptor = {
     defaultMessage,
-    id
+    id,
   };
   if (description != null) {
     descriptor.description = description;

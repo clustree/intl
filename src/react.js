@@ -54,7 +54,7 @@ class TranslateHelper extends React.Component {
     const localComponents = { ...components };
     let jsxElement = 0;
     const message = messages
-      .map(token => {
+      .map((token) => {
         if (typeof token === "string") {
           return token;
         } else {

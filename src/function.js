@@ -2,7 +2,7 @@ import IntlMessageFormat from "intl-messageformat";
 
 let globalIntl = {
   messages: {},
-  locale: "en"
+  locale: "en",
 };
 
 export function translate(defaultMessage, options = {}, intl = globalIntl) {

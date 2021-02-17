@@ -4,9 +4,9 @@ const babel = require("@babel/core");
 const rimraf = require("rimraf");
 const glob = require("glob");
 
-exports.transform = function(filename, options = {}) {
+exports.transform = function (filename, options = {}) {
   return new Promise((r, e) => {
-    return babel.transformFile(filename, options, error => {
+    return babel.transformFile(filename, options, (error) => {
       if (error) {
         e(error);
       } else {
@@ -16,9 +16,9 @@ exports.transform = function(filename, options = {}) {
   });
 };
 
-exports.rimraf = function(pattern, options = {}) {
+exports.rimraf = function (pattern, options = {}) {
   return new Promise((r, e) =>
-    rimraf(pattern, options, error => {
+    rimraf(pattern, options, (error) => {
       if (error) {
         e(error);
       } else {
@@ -28,7 +28,7 @@ exports.rimraf = function(pattern, options = {}) {
   );
 };
 
-exports.glob = function(pattern, options = {}) {
+exports.glob = function (pattern, options = {}) {
   return new Promise((r, e) =>
     glob(pattern, options, (err, files) => {
       if (err) {

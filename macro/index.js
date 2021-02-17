@@ -20,7 +20,7 @@ function macro({ references, state, config, babel }) {
     for (const referencePath of references[ref] || []) {
       imports[ref] = {
         name: `${ref.toUpperCase()}_${i}`,
-        value: t.identifier(referencePath.node.name)
+        value: t.identifier(referencePath.node.name),
       };
       break;
     }

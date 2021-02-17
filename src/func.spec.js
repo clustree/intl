@@ -5,7 +5,7 @@ describe("translate", () => {
   it("gives the correct result", () => {
     expect(
       translate("test {value}", {
-        values: { value: 4 }
+        values: { value: 4 },
       })
     ).toEqual("test 4");
   });
@@ -14,7 +14,7 @@ describe("translate", () => {
     setLocale("fr");
     expect(
       translate("test {value}", {
-        values: { value: 4 }
+        values: { value: 4 },
       })
     ).toEqual("test 4");
   });
@@ -22,11 +22,11 @@ describe("translate", () => {
   it("works with an full setLocale", () => {
     setLocale("fr", {
       "test {value}": "{value} de test",
-      test2: "deuxieme test"
+      test2: "deuxieme test",
     });
     expect(
       translate("test {value}", {
-        values: { value: 4 }
+        values: { value: 4 },
       })
     ).toEqual("4 de test");
     expect(translate("test2")).toEqual("deuxieme test");
@@ -37,7 +37,7 @@ describe("translate", () => {
     expect(
       translate("test {value}", {
         values: { value: 4 },
-        id: "id.4"
+        id: "id.4",
       })
     ).toEqual("4 de test");
   });
@@ -52,7 +52,7 @@ describe("formatDate", () => {
         {
           year: "numeric",
           month: "long",
-          day: "2-digit"
+          day: "2-digit",
         },
         { locale: "en" }
       )
@@ -63,7 +63,7 @@ describe("formatDate", () => {
       formatDate(new Date(2017, 0, 1), {
         year: "numeric",
         month: "long",
-        day: "2-digit"
+        day: "2-digit",
       })
     ).toBe("January 01, 2017");
   });

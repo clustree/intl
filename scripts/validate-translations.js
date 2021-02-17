@@ -65,8 +65,8 @@ function getValues(message) {
 function getComponents(message) {
   const tags = new Set(
     tokenize(message)
-      .filter(e => e.type.startsWith("jsx"))
-      .map(e => e.id)
+      .filter((e) => e.type.startsWith("jsx"))
+      .map((e) => e.id)
   );
   return tags;
 }
@@ -111,7 +111,7 @@ exports.validate = (prefix = defaultPrefix) => {
         message: message.message,
         defaultMessage: messageCache.get(defaultLanguage).get(key).message,
         components: new Set(),
-        values: new Set()
+        values: new Set(),
       };
       for (const component of getComponents(message.message)) {
         if (!components.has(component)) {
@@ -163,7 +163,7 @@ function logErrorObj(errorObj) {
     variantKey,
     variant,
     components,
-    values
+    values,
   } = errorObj;
   const logVariant = errorObj.variantKey && errorObj.variantKey !== "default";
   console.log(chalk`  {yellow ${language}} {green ${key}} ${message}`);
@@ -177,7 +177,7 @@ function logErrorObj(errorObj) {
     console.log(
       `      Missing components ${[...errorObj.components]
         .sort()
-        .map(e => chalk.blue(e))
+        .map((e) => chalk.blue(e))
         .join(", ")} in default Message`
     );
   }
@@ -185,7 +185,7 @@ function logErrorObj(errorObj) {
     console.log(
       `      Missing values ${[...errorObj.values]
         .sort()
-        .map(e => chalk.magenta(e))
+        .map((e) => chalk.magenta(e))
         .join(", ")} in default Message`
     );
   }

@@ -5,7 +5,7 @@ import { Provider, translate, Translate } from "../macro";
 
 const smallStrong = {
   small: <small />,
-  strong: <strong />
+  strong: <strong />,
 };
 
 function checkSnapshot(elt, { locale = "en", messages } = {}) {
@@ -49,8 +49,8 @@ describe("Translate", () => {
         locale: "fr",
         messages: {
           "<strong>bold</strong><small>tiny</small>":
-            "<small>Tres petit</small><strong>gras</strong>"
-        }
+            "<small>Tres petit</small><strong>gras</strong>",
+        },
       }
     );
   });
@@ -91,7 +91,7 @@ describe("translate", () => {
   it("gives the correct result", () => {
     expect(
       translate("test {value}", {
-        values: { value: 4 }
+        values: { value: 4 },
       })
     ).toEqual("test 4");
   });
@@ -110,8 +110,8 @@ describe("Dynamic translations", () => {
         locale: "fr",
         messages: {
           "dynamic.custom1": "custom1 name",
-          "dynamic.custom2": "custom2 name"
-        }
+          "dynamic.custom2": "custom2 name",
+        },
       }
     );
   });

@@ -15,7 +15,7 @@ class ParseError extends Error {
 
 exports.ParseError = ParseError;
 
-exports.parse = messages => {
+exports.parse = (messages) => {
   const invalidICUFormat = [];
   const invalidXML = [];
   const langCache = new Map();
@@ -45,7 +45,7 @@ exports.parse = messages => {
           key,
           message,
           variant: variant.value,
-          variantKey
+          variantKey,
         });
         continue;
       }
@@ -55,7 +55,7 @@ exports.parse = messages => {
   if (invalidICUFormat.length || invalidXML.length) {
     throw new ParseError({
       invalidICUFormat,
-      invalidXML
+      invalidXML,
     });
   }
   return langCache;

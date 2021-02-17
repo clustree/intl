@@ -38,7 +38,7 @@ function dedent(strings, ...values) {
 
   if (mindent !== null) {
     const m = mindent; // appease Flow
-    result = lines.map(l => (l[0] === " " ? l.slice(m) : l)).join("\n");
+    result = lines.map((l) => (l[0] === " " ? l.slice(m) : l)).join("\n");
   }
   return (
     result
@@ -59,7 +59,7 @@ describe("parse", () => {
         pluralXml: "<a>{value, plural, one { # </a>} other {# </a>}}",
         selectXml: "<a>{value, select, male { # </a>} other {# </a>}}",
         nested:
-          "<a>{value1, plural, one {{value2, select,left {one left</a>} other {one right</a>}}}other {{value2, select,right {one right</a>} other {one left</a>}}}}"
+          "<a>{value1, plural, one {{value2, select,left {one left</a>} other {one right</a>}}}other {{value2, select,right {one right</a>} other {one left</a>}}}}",
       })
     ).toMatchInlineSnapshot(
       `

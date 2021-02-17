@@ -23,7 +23,7 @@ export function tokenize(input) {
   const matches = [
     test(input, regexOpen, "jsx-open"),
     test(input, regexClose, "jsx-close"),
-    test(input, regexAutoClose, "jsx-autoclose")
+    test(input, regexAutoClose, "jsx-autoclose"),
   ];
   const match = matches.reduce((acc, e) => {
     if (acc == null) {
@@ -44,7 +44,7 @@ export function tokenize(input) {
   return [
     { type: "string", value: input.slice(0, start) },
     { type, id, value },
-    ...tokenize(input.slice(end))
+    ...tokenize(input.slice(end)),
   ];
 }
 

@@ -18,12 +18,12 @@ function getMessageVariants(ast) {
         return {
           type: "plural",
           id: ast.id,
-          values: ast.format.options.map(option => {
+          values: ast.format.options.map((option) => {
             return {
               selector: option.selector,
-              value: getMessageVariants(option.value)
+              value: getMessageVariants(option.value),
             };
-          })
+          }),
         };
       }
     }
@@ -31,12 +31,12 @@ function getMessageVariants(ast) {
       return {
         type: "select",
         id: ast.id,
-        values: ast.format.options.map(option => {
+        values: ast.format.options.map((option) => {
           return {
             selector: option.selector,
-            value: getMessageVariants(option.value)
+            value: getMessageVariants(option.value),
           };
-        })
+        }),
       };
     }
   }
@@ -51,9 +51,9 @@ function flatten(ast) {
     const res = ast.reduce(
       (acc, token) => {
         if (typeof token === "string") {
-          return acc.map(e => ({
+          return acc.map((e) => ({
             ...e,
-            value: e.value + token
+            value: e.value + token,
           }));
         } else {
           let retVal = [];
@@ -62,13 +62,13 @@ function flatten(ast) {
             const { selector } = pluralValue;
             for (const inner of flatten(pluralValue.value)) {
               retVal = retVal.concat(
-                acc.map(e => ({
+                acc.map((e) => ({
                   plurals: [
                     ...e.plurals,
                     { pluralId, selector },
-                    ...inner.plurals
+                    ...inner.plurals,
                   ],
-                  value: e.value + inner.value
+                  value: e.value + inner.value,
                 }))
               );
             }

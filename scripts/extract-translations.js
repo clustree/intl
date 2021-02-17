@@ -6,7 +6,7 @@ const {
   default: manageTranslations,
   readMessageFiles,
   createSingleMessagesFile,
-  getDefaultMessages
+  getDefaultMessages,
 } = require("react-intl-translations-manager");
 const ora = require("ora");
 
@@ -27,14 +27,16 @@ const { default: Worker } = require("jest-worker");
 
   spinner.start("getting javascript files");
   const files = await worker.glob("src/**/*.js", {
-    ignore: ["**/*.spec.js", "**/__tests__/**"]
+    ignore: ["**/*.spec.js", "**/__tests__/**"],
   });
   spinner.succeed();
 
   spinner.start("extracting intl messages");
-  const promises = files.map(file => worker.transform(file, { babelrc: true }));
+  const promises = files.map((file) =>
+    worker.transform(file, { babelrc: true })
+  );
   let done = 0;
-  promises.forEach(p =>
+  promises.forEach((p) =>
     p.then(() => {
       done++;
       if (done % 10 === 0) {
@@ -57,8 +59,8 @@ const { default: Worker } = require("jest-worker");
     detectDuplicateIds: false,
     jsonOptions: {
       trailingNewline: true,
-      space: 2
-    }
+      space: 2,
+    },
   });
 
   // Output Default Messages
@@ -68,7 +70,7 @@ const { default: Worker } = require("jest-worker");
   createSingleMessagesFile({
     messages,
     directory: translationsDirectory,
-    fileName: "en.json"
+    fileName: "en.json",
   });
 
   const duplicateIdSet = new Set(duplicateIds.sort());
@@ -91,16 +93,16 @@ const { default: Worker } = require("jest-worker");
 function joinLines(string) {
   return string
     .split("\n")
-    .map(s => s.trim())
+    .map((s) => s.trim())
     .join(" ");
 }
 
 function getMessages(messages, duplicateId) {
   return new Set(
     []
-      .concat(...messages.map(e => e.descriptors))
-      .filter(e => e.id === duplicateId)
-      .map(e => e.defaultMessage)
+      .concat(...messages.map((e) => e.descriptors))
+      .filter((e) => e.id === duplicateId)
+      .map((e) => e.defaultMessage)
       .map(joinLines)
   );
 }

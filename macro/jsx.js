@@ -2,7 +2,7 @@ const {
   getMessageDescriptorValue,
   getMessageDescriptorKey,
   storeMessage,
-  buildMacroError
+  buildMacroError,
 } = require("./helpers");
 
 exports.handleJSX = function handleJSX(p, state, babel) {
@@ -23,14 +23,14 @@ const mergeProps = (props, nextProps) => ({
   values: Object.assign({}, props.values, nextProps.values),
   components: Object.assign({}, props.components, nextProps.components),
   formats: props.formats,
-  elementIndex: nextProps.elementIndex
+  elementIndex: nextProps.elementIndex,
 });
 
 const initialProps = ({ formats } = {}) => ({
   text: "",
   values: {},
   components: {},
-  formats: formats || {}
+  formats: formats || {},
 });
 
 function transformJSX(path, state, babel) {
@@ -64,14 +64,14 @@ function processElement(node, props, types) {
         ? types.identifier(name)
         : types.stringLiteral(name),
       node
-    )
+    ),
   });
   return props;
 }
 
 const generatorFactory = () => {
   const data = new Map();
-  return key => {
+  return (key) => {
     const value = data.get(key) || 0;
     data.set(key, value + 1);
     return value;
@@ -99,7 +99,7 @@ function processChild(node, props, types) {
         }
       });
 
-      parts.forEach(item => {
+      parts.forEach((item) => {
         if (types.isTemplateElement(item)) {
           nextProps.text += item.value.raw;
         } else {
@@ -151,10 +151,7 @@ function processTranslate(path, types) {
   // remove whitespace before/after tag
   const nlTagRe = /(?:(>)(?:\r\n|\r|\n)+\s+|(?:\r\n|\r|\n)+\s+(?=<))/g;
 
-  const text = props.text
-    .replace(nlTagRe, "$1")
-    .replace(nlRe, " ")
-    .trim();
+  const text = props.text.replace(nlTagRe, "$1").replace(nlRe, " ").trim();
 
   const values = Object.values(props.values);
   const components = Object.values(props.components);
@@ -214,17 +211,17 @@ function extractDefs(path, state) {
   const attributes = path
     .get("openingElement")
     .get("attributes")
-    .filter(attr => attr.isJSXAttribute());
+    .filter((attr) => attr.isJSXAttribute());
 
   if (
-    attributes.find(attribute => attribute.node.name.name === "allowDynamic")
+    attributes.find((attribute) => attribute.node.name.name === "allowDynamic")
   ) {
     // Ignore this Tag as it is dynamic
     return;
   }
 
   let descriptor = createMessageDescriptor(
-    attributes.map(attr => [attr.get("name"), attr.get("value")])
+    attributes.map((attr) => [attr.get("name"), attr.get("value")])
   );
 
   // In order for a default message to be extracted when
@@ -241,7 +238,7 @@ function extractDefs(path, state) {
     storeMessage(descriptor, path, state);
 
     // Remove description since it's not used at runtime.
-    attributes.some(attr => {
+    attributes.some((attr) => {
       const ketPath = attr.get("name");
       if (getMessageDescriptorKey(ketPath) === "description") {
         attr.remove();
@@ -259,7 +256,7 @@ function extractDefs(path, state) {
 }
 
 function evaluateMessageDescriptor({ ...descriptor }) {
-  Object.keys(descriptor).forEach(key => {
+  Object.keys(descriptor).forEach((key) => {
     const valuePath = descriptor[key];
 
     descriptor[key] = getMessageDescriptorValue(valuePath);
