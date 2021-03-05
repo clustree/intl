@@ -54,15 +54,13 @@ function processElement(node, props, types) {
     name = `${name}-${index}`;
   }
 
-  props.text += !selfClosing ? `<${name}>` : `<${name}/>`;
+  props.text += `<${name}>`;
 
   for (const child of node.children) {
     props = processChild(child, props, types);
   }
 
-  if (!selfClosing) {
-    props.text += `</${name}>`;
-  }
+  props.text += `</${name}>`;
 
   props.values = Object.assign({}, props.values, {
     [name]: types.objectProperty(
@@ -71,7 +69,9 @@ function processElement(node, props, types) {
         : types.stringLiteral(name),
 
       types.arrowFunctionExpression(
-        [types.identifier("chunks")],
+        // If the component is self closing, we won't be using the chunks
+        // passed in by react-intl
+        selfClosing ? [] : [types.identifier("chunks")],
         types.isJSXFragment(node)
           ? types.jSXFragment(
               types.jSXOpeningFragment(),
@@ -81,7 +81,10 @@ function processElement(node, props, types) {
           : types.jSXElement(
               types.cloneNode(node.openingElement),
               types.cloneNode(node.closingElement),
-              [types.jsxExpressionContainer(types.identifier("chunks"))]
+              selfClosing
+                ? [] // If the component is self closing, we want children to be an empty array
+                : [types.jsxExpressionContainer(types.identifier("chunks"))],
+              selfClosing
             )
       )
     ),

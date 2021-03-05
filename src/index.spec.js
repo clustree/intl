@@ -90,6 +90,29 @@ describe("Translate", () => {
         </strong>,
       ]
     `);
+
+    expect(
+      buildSnapshot(
+        <>
+          <Translate>
+            a <br /> newline
+          </Translate>
+        </>,
+        {
+          locale: "fr",
+          messages: {
+            "a <br></br> newline": "un <br></br> retour a la ligne",
+          },
+          onError: console.error,
+        }
+      )
+    ).toMatchInlineSnapshot(`
+      Array [
+        "un ",
+        <br />,
+        " retour a la ligne",
+      ]
+    `);
   });
 });
 
