@@ -1,6 +1,6 @@
 {
   "name": "@clustree/intl",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Components used for translation by Clustree",
   "source": "src/index.js",
   "main": "lib/index.js",
