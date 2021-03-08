@@ -123,7 +123,7 @@ describe("Translate", () => {
       buildSnapshot(
         <Translate components={smallStrong}>bob {strong}</Translate>
       )
-    ).toMatchInlineSnapshot(`"bob "`);
+    ).toMatchInlineSnapshot(`"bob <strong/>"`);
     const details = "<details/>";
     expect(
       buildSnapshot(

@@ -1,19 +1,31 @@
-import IntlMessageFormat from "intl-messageformat";
+import { createIntl, createIntlCache } from "react-intl";
+import { logError } from "./utils";
 
-let globalIntl = {
-  messages: {},
-  locale: "en",
-};
+const cache = createIntlCache();
+
+let globalIntl = createIntl(
+  {
+    locale: "en",
+    messages: {},
+  },
+  cache
+);
 
 export function translate(defaultMessage, options = {}, intl = globalIntl) {
   const { id = defaultMessage, values } = options;
-  const { locale, messages } = intl;
-  const message = messages[id] || defaultMessage;
-  return new IntlMessageFormat(message, locale).format(values);
+  try {
+    return intl.formatMessage({ id, defaultMessage }, values);
+  } catch (error) {
+    logError(id, error);
+    return "";
+  }
 }
 
-export function setLocale(newLocale, newMessages = {}) {
-  globalIntl = { locale: newLocale, messages: newMessages };
+export function setLocale(newLocale, newMessages = {}, onError) {
+  globalIntl = createIntl(
+    { locale: newLocale, messages: newMessages, onError },
+    cache
+  );
 }
 
 export function formatDate(date, options, intl = globalIntl) {

@@ -49,8 +49,8 @@ describe("Translate", () => {
     ).toMatchInlineSnapshot(`
       import { Translate } from '@clustree/intl';
 
-      const a = bob => <Translate id="str" defaultMessage="<Fragment><p><a/></p><p-1></p-1></Fragment>" values={{
-        a: chunks => <a href="" />,
+      const a = bob => <Translate id="str" defaultMessage="<Fragment><p><a></a></p><p-1></p-1></Fragment>" values={{
+        a: () => <a href="" />,
         p: chunks => <p>{chunks}</p>,
         "p-1": chunks => <p>{chunks}</p>,
         Fragment: chunks => <Fragment>{chunks}</Fragment>
@@ -70,8 +70,8 @@ describe("Translate", () => {
     ).toMatchInlineSnapshot(`
       import { Translate } from '@clustree/intl';
 
-      const a = bob => <Translate id="str" defaultMessage="<Fragment><p><a/></p><p-1></p-1></Fragment>" values={{
-        a: chunks => <a href="" />,
+      const a = bob => <Translate id="str" defaultMessage="<Fragment><p><a></a></p><p-1></p-1></Fragment>" values={{
+        a: () => <a href="" />,
         p: chunks => <p>{chunks}</p>,
         "p-1": chunks => <p>{chunks}</p>,
         Fragment: chunks => <>{chunks}</>

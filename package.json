@@ -2,17 +2,20 @@
   "name": "@clustree/intl",
   "version": "1.0.1",
   "description": "Components used for translation by Clustree",
+  "source": "src/index.js",
   "main": "lib/index.js",
+  "module": "lib/index.esm.js",
   "author": "Clustree",
   "license": "MIT",
   "private": false,
   "peerDependencies": {
     "babel-plugin-macros": "^2.2.0 || ^3.0.0",
+    "react": "^16.8.0 || ^17.0.0",
     "react-intl": "^5.8.0"
   },
   "scripts": {
     "prebuild": "rimraf lib",
-    "build": "babel src -d lib --ignore '**/*.spec.js'",
+    "build": "microbundle --jsx React.createElement --strict",
     "lint": "eslint src macro",
     "prepare": "yarn build",
     "test": "jest"
@@ -34,6 +37,7 @@
     "intl-messageformat-parser": "^6.3.2",
     "jest-worker": "^26.6.2",
     "ora": "^5.3.0",
+    "react-error-boundary": "^3.1.1",
     "react-intl-translations-manager": "^5.0.1",
     "rimraf": "^3.0.2"
   },
@@ -42,6 +46,10 @@
       "^@clustree/intl$": "<rootDir>/src/index.js",
       "^@clustree/intl/macro$": "<rootDir>/macro/index.js"
     },
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ],
     "verbose": true,
     "collectCoverageFrom": [
       "src/**/*.js",
@@ -50,7 +58,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.16",
     "@babel/plugin-proposal-class-properties": "^7.12.13",
     "@babel/plugin-proposal-object-rest-spread": "^7.12.13",
     "@babel/preset-env": "^7.12.16",
@@ -62,7 +69,9 @@
     "eslint-plugin-react": "^7.22.0",
     "husky": "^4.0.0",
     "jest": "^26.6.3",
+    "jest-watch-typeahead": "^0.6.1",
     "lint-staged": "^10.5.4",
+    "microbundle": "^0.13.0",
     "prettier": "^2.2.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
@@ -76,7 +85,6 @@
     }
   },
   "resolutions": {
-    "braces": "^3.0.0",
     "micromatch": "^4.0.0",
     "mkdirp": "0.5.5"
   }

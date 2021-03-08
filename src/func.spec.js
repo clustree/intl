@@ -11,12 +11,14 @@ describe("translate", () => {
   });
 
   it("works with an empty setLocale", () => {
-    setLocale("fr");
+    const onError = jest.fn();
+    setLocale("fr", {}, onError);
     expect(
       translate("test {value}", {
         values: { value: 4 },
       })
     ).toEqual("test 4");
+    expect(onError).toHaveBeenCalled();
   });
 
   it("works with an full setLocale", () => {
